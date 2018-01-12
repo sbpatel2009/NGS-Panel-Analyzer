@@ -1,0 +1,24 @@
+Package: NGSPanelAnalyzer
+Type: Package
+Title: This package contains the NGS-Panel-Analyzer R package
+Description: This package contains the NGS-Panel-Analyzer R package. ADD MORE DETAILS.
+Version: 0.99.0
+Date: 2018-01-12
+Authors@R: c( person("Snehal", "Patel",
+        email="snehal.patel@nih.gov", role=c("aut", "cre")))
+License: MIT
+Depends: R (>= 3.4.0),
+    shiny
+Imports: rmarkdown,
+    AnnotationHub,
+    ggplot2,
+    stringr,
+    rmarkdown,
+    GenomicRanges
+Suggests: knitr
+biocViews: Sequencing
+URL: https://github.com/sbpatel2009/NGS-Panel-Analyzer
+BugReports:
+        https://github.com/sbpatel2009/NGS-Panel-Analyzer/issues/new
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
