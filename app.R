@@ -68,12 +68,7 @@ ui = fluidPage(
                  inputId = "header", 
                  label = "My BED file has header", 
                  value = TRUE),
-               
-               radioButtons('format', 'Document format', c('PDF', 'HTML', 'Word'),
-                            inline = TRUE),
-               
-               downloadButton('downloadReport'),
-               
+
                textOutput("summary"),
                plotOutput(outputId = "insertLength"),
                plotOutput(outputId = "amplicons"),
@@ -350,52 +345,9 @@ server = function(input, output) {
       ylab("Percent coverage (%)") + 
       xlab("Gene")
   })
-    
 }
-#bed = read.csv(file = "example_BED_file.csv", header = TRUE)
-
 
 ############################################################################################################################
 #SHINY APP EXECUTE
 ############################################################################################################################
 shinyApp(ui = ui, server = server)
-
-flatGRbed = reactive({
-  bed = bed()
-  GRbed = makeGRangesFromDataFrame(bed, keep.extra.columns = TRUE)
-  flatGRbed = reduce(GRbed)  #merge bed file
-  
-  #Restore metadata (i.e., gene symbols) to flatGbed
-  ov = findOverlaps(flatGRbed, GRbed)
-  qhits = queryHits(ov)
-  DupflatGRbed = flatGRbed[qhits]
-  DupflatGRbed$gene = GRbed$gene
-  flatGRbed = unique(DupflatGRbed)
-  flatGRbed
-})
-
-GRexons = reactive({
-  bed = bed()
-  geneList = unique(bed$gene)  #obtain gene list from BED file
-  GRcosmic = GRcosmic[GRcosmic$Gene.name %in% geneList, ]  #subset COSMIC to include genes in the gene list
-  transcriptList = unique(GRcosmic$Accession.Number)  #extract COSMIC-preferred transcripts
-  GRexons = GRexons[GRexons$transcript_id %in% transcriptList, ]  #subset to include transcripts within the transcript list
-  GRexons
-})
-
-GRintersect = reactive({
-  flatGRbed = flatGRbed()
-  GRexons = GRexons()
-  GRintersect = intersect(GRexons, flatGRbed, ignore.strand = TRUE)  #Intersect merged bed file with exon intervals
-  
-  #Restore metadata (i.e., gene symbols) to GRintersect
-  ov = findOverlaps(GRintersect, flatGRbed)
-  subhits = subjectHits(ov)
-  GRintersect$gene = flatGRbed[subhits]$gene
-  GRintersect
-})
-
-
-
-
-
